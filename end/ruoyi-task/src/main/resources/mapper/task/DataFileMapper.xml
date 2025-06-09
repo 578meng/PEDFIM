@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.task.mapper.DataFileMapper">
+
+    <resultMap type="DataFile" id="DataFileResult">
+        <result property="fileId"    column="fileId"    />
+        <result property="fileName"    column="fileName"    />
+        <result property="fileType"    column="fileType"    />
+        <result property="fileSize"    column="fileSize"    />
+        <result property="filePath"    column="filePath"    />
+        <result property="taskId"    column="taskId"    />
+    </resultMap>
+
+    <sql id="selectDataFileVo">
+        select fileId, fileName, fileType, fileSize, filePath, taskId from datafile
+    </sql>
+
+    <select id="selectDataFileList" parameterType="DataFile" resultMap="DataFileResult">
+        <include refid="selectDataFileVo"/>
+        <where>
+            <if test="fileName != null  and fileName != ''"> and fileName like concat('%', #{fileName}, '%')</if>
+            <if test="fileType != null  and fileType != ''"> and fileType = #{fileType}</if>
+            <if test="fileSize != null "> and fileSize = #{fileSize}</if>
+            <if test="filePath != null  and filePath != ''"> and filePath = #{filePath}</if>
+            <if test="taskId != null "> and taskId = #{taskId}</if>
+        </where>
+    </select>
+
+    <select id="selectDataFileByFileId" parameterType="Long" resultMap="DataFileResult">
+        <include refid="selectDataFileVo"/>
+        where fileId = #{fileId}
+    </select>
+
+    <select id="selectDataFileByTaskId" parameterType="Long" resultMap="DataFileResult">
+        <include refid="selectDataFileVo"/>
+        where taskId = #{taskId}
+    </select>
+
+    <insert id="insertDataFile" parameterType="DataFile" useGeneratedKeys="true" keyProperty="fileId">
+        insert into datafile
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileName != null">fileName,</if>
+            <if test="fileType != null">fileType,</if>
+            <if test="fileSize != null">fileSize,</if>
+            <if test="filePath != null">filePath,</if>
+            <if test="taskId != null">taskId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fileName != null">#{fileName},</if>
+            <if test="fileType != null">#{fileType},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="filePath != null">#{filePath},</if>
+            <if test="taskId != null">#{taskId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDataFile" parameterType="DataFile">
+        update datafile
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileName != null">fileName = #{fileName},</if>
+            <if test="fileType != null">fileType = #{fileType},</if>
+            <if test="fileSize != null">fileSize = #{fileSize},</if>
+            <if test="filePath != null">filePath = #{filePath},</if>
+            <if test="taskId != null">taskId = #{taskId},</if>
+        </trim>
+        where fileId = #{fileId}
+    </update>
+
+    <delete id="deleteDataFileByFileId" parameterType="Long">
+        delete from datafile where fileId = #{fileId}
+    </delete>
+
+    <delete id="deleteDataFileByFileIds" parameterType="String">
+        delete from datafile where fileId in
+        <foreach item="fileId" collection="array" open="(" separator="," close=")">
+            #{fileId}
+        </foreach>
+    </delete>
+</mapper>
