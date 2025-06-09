@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.task.mapper.PEFIMMapper">
+
+    <resultMap type="PEFIM" id="PEFIMResult">
+        <result property="taskId"    column="taskId"    />
+        <result property="taskName"    column="taskName"    />
+        <result property="algorithmType"    column="algorithmType"    />
+        <result property="taskType"    column="taskType"    />
+        <result property="support"    column="support"    />
+        <result property="confidence"    column="confidence"    />
+        <result property="lift"    column="lift"    />
+        <result property="startTime"    column="startTime"    />
+        <result property="endTime"    column="endTime"    />
+        <result property="taskStatus"    column="taskStatus"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <association property="dataFile" column="taskId" select="com.ruoyi.task.mapper.DataFileMapper.selectDataFileByTaskId"/>
+        <association property="resultFile" column="taskId" select="com.ruoyi.task.mapper.ResultFileMapper.selectResultFileByTaskId"/>
+    </resultMap>
+
+    <sql id="selectPEFIMVo">
+        select taskName,taskId, algorithmType, taskType, support, confidence, lift, startTime, endTime, taskStatus, remark, create_by, create_time, update_by, update_time from task
+    </sql>
+
+    <select id="selectPEFIMList" parameterType="PEFIM" resultMap="PEFIMResult">
+        <include refid="selectPEFIMVo"/>
+        <where>
+            del = 0
+            <if test="taskName != null  and taskName != ''"> and taskName like concat('%', #{taskName}, '%')</if>
+            <if test="algorithmType != null  and algorithmType != ''"> and algorithmType = #{algorithmType}</if>
+            <if test="taskType != null  and taskType != ''"> and taskType = #{taskType}</if>
+            <if test="support != null "> and support = #{support}</if>
+            <if test="confidence != null "> and confidence = #{confidence}</if>
+            <if test="lift != null "> and lift = #{lift}</if>
+            <if test="startTime != null "> and startTime = DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%s')</if>
+            <if test="endTime != null "> and endTime = DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%s')</if>
+            <if test="taskStatus != null  and taskStatus != ''"> and taskStatus = #{taskStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectPEFIMByTaskId" parameterType="Long" resultMap="PEFIMResult">
+        <include refid="selectPEFIMVo"/>
+        where del = 0 and taskId = #{taskId}
+    </select>
+
+    <insert id="insertPEFIM" parameterType="PEFIM" useGeneratedKeys="true" keyProperty="taskId">
+        insert into task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            del,
+            <if test="taskName != null">taskName,</if>
+            <if test="algorithmType != null">algorithmType,</if>
+            <if test="taskType != null">taskType,</if>
+            <if test="support != null">support,</if>
+            <if test="confidence != null">confidence,</if>
+            <if test="lift != null">lift,</if>
+            <if test="startTime != null">startTime,</if>
+            <if test="endTime != null">endTime,</if>
+            <if test="taskStatus != null">taskStatus,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            0,
+            <if test="taskName != null">#{taskName},</if>
+            <if test="algorithmType != null">#{algorithmType},</if>
+            <if test="taskType != null">#{taskType},</if>
+            <if test="support != null">#{support},</if>
+            <if test="confidence != null">#{confidence},</if>
+            <if test="lift != null">#{lift},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="taskStatus != null">#{taskStatus},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePEFIM" parameterType="PEFIM">
+        update task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskName != null">taskName = #{taskName},</if>
+            <if test="algorithmType != null">algorithmType = #{algorithmType},</if>
+            <if test="taskType != null">taskType = #{taskType},</if>
+            <if test="support != null">support = #{support},</if>
+            <if test="confidence != null">confidence = #{confidence},</if>
+            <if test="lift != null">lift = #{lift},</if>
+            <if test="startTime != null">startTime = #{startTime},</if>
+            <if test="endTime != null">endTime = #{endTime},</if>
+            <if test="taskStatus != null">taskStatus = #{taskStatus},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where taskId = #{taskId} and del = 0
+    </update>
+
+    <delete id="deletePEFIMByTaskId" parameterType="Long">
+        update task set del = 1 where taskId = #{taskId}
+    </delete>
+
+    <delete id="deletePEFIMByTaskIds" parameterType="String">
+        update task set del = 1 where taskId in
+        <foreach item="taskId" collection="array" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
+    </delete>
+</mapper>
