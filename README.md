@@ -1,5 +1,5 @@
 # PEDFIM
-code for paper 《PEDFIM: An Efficient Prefix Encoding-based  Algorithm for Distributed Frequent Itemset Mining》
+Code for paper 《PEDFIM: An Efficient Prefix Encoding-based  Algorithm for Distributed Frequent Itemset Mining》。
 
 前端使用 Vue 构建，后端由 Spring Boot 和 Scala 提供支持。
 
